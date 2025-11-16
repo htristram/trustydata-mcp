@@ -95,7 +95,37 @@ async def handle_list_tools() -> list[types.Tool]:
     return [
         types.Tool(
             name="search_localities",
-            description="Search for French localities (cities, towns, villages) with filters for region, department, and population. Returns detailed information about matching localities.",
+            description="""Search for French localities (cities, towns, villages) with comprehensive filtering options and demographic data.
+
+This tool combines data from La Poste, the French postal service, with official French administrative from INSEE.
+**Search Methods:**
+- By name: partial or full locality name (e.g., 'Paris', 'Saint-Denis')
+- By postal code(s): single code or list of codes (e.g., ['75001', '92100', '77100'])
+- By region: single or list of region name or INSEE code (e.g., 'ILE DE FRANCE' or '11')
+- By department: single ou list of department name or INSEE code (e.g., 'Paris' or '75')
+- By population: min/max thresholds
+
+**Returned Data (when details=true):**
+- Official locality name and INSEE code
+- Postal code(s)
+- Population data (2022, 2016, 2011): total, municipal, and counted separately
+- Department information: name, code, population
+- Region information: name, code, population
+
+**Best Practices:**
+- Use postal_codes for exact matching when you have a list of postal codes
+- Use q (name search) for fuzzy/partial matching
+- Combine filters to narrow results (e.g., region + population range)
+- Set limit appropriately: default 20, max 1000
+- Enable details=true to get full demographic information
+
+**Typical Use Cases:**
+- Enrich address databases with population data
+- Validate postal codes and locality names
+- Analyze demographic distribution by region/department
+- Build autocomplete systems for French addresses
+
+Returns up to 1000 results per query with official INSEE population census data.""",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -105,16 +135,22 @@ async def handle_list_tools() -> list[types.Tool]:
                     },
                     "limit": {
                         "type": "integer",
-                        "description": "Maximum number of results to return (default: 20)",
-                        "default": 20,
+                        "description": "Maximum number of results to return (default: 1000)",
+                        "default": 1000,
                         "minimum": 1,
-                        "maximum": 100,
+                        "maximum": 1000,
                     },
                     "department_code": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": "Filter by department INSEE code(s) (e.g., ['75'] for Paris, ['13'] for Bouches-du-Rhône)",
+                        "description": "Filter by department INSEE code(s) (e.g., ['75'] for Paris, ['13'] for Bouches-du-Rhône).",
                     },
+                    "postal_code": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Filter by postal code(s) (e.g., ['75001'] for Paris 1er arrondissement). It can filter by multiple postal codes simultaneously (e.g., ['75001','62930'] for Paris 1er arrondissement and Wimereux).",
+                    },
+
                     "department_name": {
                         "type": "array",
                         "items": {"type": "string"},
@@ -326,7 +362,11 @@ async def handle_post(request: Request, session: Session):
                     },
                     "serverInfo": {
                         "name": "trustydata-mcp",
-                        "version": "1.0.0"
+                        "version": "1.0.0",
+                        "icon": {
+                            "type": "url",
+                            "url": "https://mcp.trustydata.app/favicon.ico"
+                        }
                     }
                 }
             }
