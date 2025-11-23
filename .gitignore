@@ -1,0 +1,6 @@
+.env
+.env.example
+.env.remote.example
+.vscode/launch.json
+MCP Trusty Data/bruno.json
+MCP Trusty Data/Recheche CP.bru
