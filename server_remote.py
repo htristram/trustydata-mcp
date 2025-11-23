@@ -363,10 +363,12 @@ async def handle_post(request: Request, session: Session):
                     "serverInfo": {
                         "name": "trustydata-mcp",
                         "version": "1.0.0",
-                        "icon": {
-                            "type": "url",
-                            "url": "https://mcp.trustydata.app/favicon.ico"
-                        }
+                        "icons": [
+                            {
+                                "src": "https://mcp.trustydata.app/favicon.ico",
+                                "mimeType": "image/x-icon"
+                            }
+                        ]
                     }
                 }
             }
