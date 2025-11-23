@@ -365,8 +365,9 @@ async def handle_post(request: Request, session: Session):
                         "version": "1.0.0",
                         "icons": [
                             {
-                                "src": "https://mcp.trustydata.app/favicon.ico",
-                                "mimeType": "image/x-icon"
+                                "src": "https://mcp.trustydata.app/favicon.svg",
+                                "mimeType": "image/svg+xml",
+                                "sizes": "any"
                             }
                         ]
                     }
